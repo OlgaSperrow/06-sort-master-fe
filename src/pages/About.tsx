@@ -11,7 +11,7 @@ export default function About() {
                     In Germany, trash separation is legally mandated and divided into several categories to conserve resources
                     and optimize disposal. Trash sorting helps protect the environment and allows for the efficient recycling
                     and reuse of various materials. For this purpose, separate containers are used for paper, plastic, glass,
-                    organic rubish, and residual trash.
+                    organic rubbish, and residual trash.
                 </p>
 
             </div>
