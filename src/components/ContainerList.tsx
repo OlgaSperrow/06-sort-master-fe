@@ -10,7 +10,7 @@ interface Container {
 const ContainerList = () => {
     const [containers, setContainers] = useState<Container []>([]);
     const [error, setError] = useState<null | string>(null);
-    const [message, setMessage] = useState<null | string>(null);
+    const [message, setMessage] = useState<Record<string, string | null>>({});
     const [aktiveInput, setAktiveInput] = useState<null | string>(null);
     const [newItems, setNewItems] = useState<Record<string, string>>({});
 
@@ -29,7 +29,6 @@ const ContainerList = () => {
             .then((res) => {
                 if (!res.ok) throw new Error("Failed to delete container.");
                 setContainers((prev) => prev.filter((c) => c.id !== id));
-                setMessage("Container successfully deleted.");
             })
             .catch((err) => {
                 setError(err.message || "Container is not deleted");
@@ -51,10 +50,15 @@ const ContainerList = () => {
                 }),
             }).then((res) => {
             if (!res.ok) throw new Error("Failed to add item.");
-            setMessage("Item successfully added.");
+            setMessage((prev) => ({ ...prev, [containerId]: "Item successfully added." }));
             setNewItems((prev) => ({...prev, [containerId]: ""}));
             setAktiveInput(null);
+
+            setTimeout(() => {
+                setMessage((prev) => ({ ...prev, [containerId]: null }));
+            }, 7000);
         })
+
             .catch((err) => {
                 setError(err.message || "Failed to add item.");
             });
@@ -111,6 +115,15 @@ const ContainerList = () => {
                             </button>
 
                         </div>
+
+                        {message[container.id] && (
+                            <div className="px-3 py-1 rounded border border-transparent focus:outline-none focus:ring-2 focus:ring-gray-600 mb-2 w-full" style={{
+                                backgroundColor: container.color,
+                                color: "black"
+                            }}>
+                                {message[container.id]}
+                            </div>
+                        )}
 
 
                     </li>
