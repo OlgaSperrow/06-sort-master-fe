@@ -10,7 +10,7 @@ interface Container {
 const ContainerList = () => {
     const [containers, setContainers] = useState<Container []>([]);
     const [error, setError] = useState<null | string>(null);
-    const [message, setMessage] = useState<Record<string, string | null>>({});
+    const [message, setMessage] = useState <string | null>(null);
     const [aktiveInput, setAktiveInput] = useState<null | string>(null);
     const [newItems, setNewItems] = useState<Record<string, string>>({});
 
@@ -24,44 +24,52 @@ const ContainerList = () => {
             .catch(setError);
     }, []);
 
-    const handleDelete = (id: string) => {
-        fetch(`/api/containers/${id}`, {method: "DELETE"})
-            .then((res) => {
-                if (!res.ok) throw new Error("Failed to delete container.");
-                setContainers((prev) => prev.filter((c) => c.id !== id));
-            })
-            .catch((err) => {
-                setError(err.message || "Container is not deleted");
-            });
+    const handleDelete = async (id: string) => {
+        try{
+            const res = await fetch(`/api/containers/${id}`, {method: "DELETE"});
+            if (!res.ok){
+                throw new Error("Failed to delete container.");
+            }
+            setContainers((prev) => prev.filter((c) => c.id !== id));
+
+            setMessage("Container deleted successfully");
+
+            setTimeout(() => setMessage(null), 7000);
+
+
+        }catch(err){
+            setError(err.message || "Container is not deleted");
+        }
     };
 
-    const handleAddItem = (containerId: string) => {
+    const handleAddItem = async (containerId: string) => {
         const itemText = newItems[containerId]?.trim();
-        if (!itemText) {
-            return;
-        }
+        if (!itemText) return;
 
-        fetch(`/api/items`,
-            {
+        try {
+            const res = await fetch(`/api/items`, {
                 method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({name: itemText,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name: itemText,
                     containerId: containerId
                 }),
-            }).then((res) => {
-            if (!res.ok) throw new Error("Failed to add item.");
-            setMessage((prev) => ({ ...prev, [containerId]: "Item successfully added." }));
-            setNewItems((prev) => ({...prev, [containerId]: ""}));
+            });
+
+            if (!res.ok) {
+                throw new Error("Failed to add item.");
+            }
+
+            setMessage( "Item successfully added." );
+            setNewItems((prev) => ({ ...prev, [containerId]: "" }));
             setAktiveInput(null);
 
             setTimeout(() => {
-                setMessage((prev) => ({ ...prev, [containerId]: null }));
+                setMessage(null);
             }, 7000);
-        })
-
-            .catch((err) => {
-                setError(err.message || "Failed to add item.");
-            });
+        } catch (err) {
+            setError(err.message || "Failed to add item.");
+        }
     };
 
 
@@ -71,6 +79,8 @@ const ContainerList = () => {
     return (
         <div className="p-6">
             <h2 className="text-2xl font-bold mb-4">Rubbish Containers</h2>
+            {message ? <p className="text-green-600">{message}</p> : null}
+            {error ? <p className="text-red-500"> {error}</p> : null}
             <ul className="space-y-4">
                 {containers.map((container: Container) => (
                     <li
@@ -101,27 +111,27 @@ const ContainerList = () => {
                                        ...prev,
                                        [container.id]: e.target.value
                                    }))}
-                                   className="px-3 py-1 rounded border border-transparent focus:outline-none focus:ring-2 focus:ring-gray-600 mb-2 w-full"
+                                   className="px-3 py-1 rounded border border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-800 mb-2 w-full placeholder-black "
                                    style={{
-                                       backgroundColor: container.color,
+                                       backgroundColor: "#EBE8EC",
                                        color: "black"
                                    }}
                             />
                             <button
                                 onClick={() => handleAddItem(container.id)}
-                                className="ml-4 px-3 py-1 bg-gray-300 hover:bg-gray-200 rounded text-black"
+                                className="ml-4 px-3 py-1 border-2 border-gray-600 bg-gray-300 hover:bg-gray-200 rounded text-black"
                             >
                                 addItem
                             </button>
 
                         </div>
 
-                        {message[container.id] && (
-                            <div className="px-3 py-1 rounded border border-transparent focus:outline-none focus:ring-2 focus:ring-gray-600 mb-2 w-full" style={{
+                        {message && (
+                            <div className="px-3 py-1  w-full" style={{
                                 backgroundColor: container.color,
                                 color: "black"
                             }}>
-                                {message[container.id]}
+                                {message}
                             </div>
                         )}
 
