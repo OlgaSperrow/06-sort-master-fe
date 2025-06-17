@@ -111,7 +111,9 @@ const ContainerList = () => {
                                        ...prev,
                                        [container.id]: e.target.value
                                    }))}
-                                   className="px-3 py-1 rounded border border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-800 mb-2 w-full placeholder-black "
+                                   className={`px-3 py-1 rounded border mb-2 w-full placeholder-black ${
+                                       aktiveInput === container.id ? "border-gray-800 ring-2 ring-gray-800" : "border-gray-600"
+                                   }`}
                                    style={{
                                        backgroundColor: "#EBE8EC",
                                        color: "black"
