@@ -5,8 +5,3 @@ export default interface Container {
     description: string;
 }
 
-export type Item = {
-    id: string;
-    name: string;
-    containerId: string;
-};

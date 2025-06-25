@@ -1,16 +1,21 @@
-import type {Item} from "../common/Types.ts";
+
+import type { Item } from "../common/Item.ts";
 
 
-type Props = {
+interface Props {
     item: Item;
-};
+    containerColor: string;
+}
 
-const ItemsCard = ({item}: Props ) => {
+const ItemsCard = ({ item, containerColor  }: Props) => {
     return (
-        <li className="p-4 rounded-lg bg-green-300 text-black">
-            <h4> {item.name}</h4>
-            <p> Container ID: {item.containerId}</p>
+        <li
+            className="p-2 rounded text-black text-center mb-2"
+            style = {{backgroundColor: containerColor}}
 
+        >
+            <p className="text-black">Item name : {item.name}</p>
+            <p className="text-black">Container ID: {item.containerId}</p>
         </li>
     );
 };
