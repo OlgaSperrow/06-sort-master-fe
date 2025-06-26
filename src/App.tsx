@@ -5,6 +5,7 @@ import Layout from "./layouts/Layout";
 import Containers from "./pages/Containers";
 import CreateContainerForm from "./components/CreateContainerForm";
 import Items from "./pages/Items.tsx";
+import ItemDetail from "./pages/ItemDetail.tsx";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/containers" element={<Containers />} />
           <Route path="/container-form" element={<CreateContainerForm />} />
           <Route path="/items" element={<Items />} />
+          <Route path="/items/:id" element={<ItemDetail />} />
 
         </Routes>
       </Layout>
