@@ -1,34 +1,19 @@
 import {useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
-import type {Item} from "../common/Item.ts";
-import type Container from "../common/Types.ts";
-
-
+import type {ExtendedItem} from "../common/ExtendedItem.ts";
 
 const ItemDetail = () => {
     const { id } = useParams<{ id: string }>();
-    const [item, setItem] = useState<Item | undefined>(undefined);
-    const [container, setContainer] = useState<Container | undefined>(undefined);
+    const [item, setItem] = useState<ExtendedItem | undefined>(undefined);
+
 
     async function fetchItem(id: string | undefined) {
-            const res = await fetch(`/api/items/${id}`);
+            const res = await fetch(`/api/items/extended/${id}`);
             if(!res.ok) {
                 throw new Error("Error loading item details.");
             }
             const data = await res.json();
             setItem(data);
-            fetchContainer(data.containerId)
-    }
-
-    async function fetchContainer(containerId: string) {
-
-            const res = await fetch(`/api/containers/${containerId}`);
-            if(!res.ok) {
-                throw new Error("Error loading container.");
-            }
-            const data = await res.json();
-            setContainer(data);
-
     }
 
     useEffect(() => {
@@ -37,8 +22,8 @@ const ItemDetail = () => {
 
     return (
         <div>
-          Item: {item?.name} <span style ={{backgroundColor: container?.color}}>
-            Container: {container?.id}</span>
+          Item: {item?.name} <span style ={{backgroundColor: item?.container?.color}}>
+            Container: {item?.container?.id}</span>
 
         </div>
     );
