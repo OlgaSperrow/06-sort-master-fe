@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import AdvertList from "../components/AdvertList.tsx";
 
 interface Result {
   item: string;
@@ -66,7 +67,12 @@ const Home = () => {
           </li>
         ))}
       </ul>
+        <div className="mt-10">
+            <h2 className="text-2xl font-bold mb-4">Adverts</h2>
+            <AdvertList />
+        </div>
     </div>
+
   );
 };
 
