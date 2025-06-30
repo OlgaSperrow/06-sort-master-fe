@@ -1,6 +1,7 @@
-export interface AdvertItemProps {
+export interface AdvertFormValues {
     title: string;
     description: string;
     photo: string;
-    onEdit?: () => void;
 }
+
+
