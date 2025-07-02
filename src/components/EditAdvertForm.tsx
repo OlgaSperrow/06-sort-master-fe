@@ -1,17 +1,22 @@
-import {useEffect, useState} from 'react';
-import {useFormik} from "formik";
+// EditAdvertForm.tsx
+import { useEffect, useState } from "react";
+import { useFormik } from "formik";
 import * as Yup from "yup";
-import type {Advert} from "../common/Advert.ts";
+import type { Advert } from "../common/Advert.ts";
 import EditAdvertCard from "./EditAdvertCard.tsx";
+import { useAdvertContext } from "../app/UseAdvertContext.ts";
 
 interface Props {
     advertId: number;
+    onUpdated: () => void;
 }
 
-const EditAdvertForm = ({advertId}:Props) => {
+const EditAdvertForm = ({ advertId, onUpdated }: Props) => {
+    const { updateAdvert } = useAdvertContext();
     const [message, setMessage] = useState<{ type: string; text: string } | null>(
         null
     );
+
     const formik = useFormik({
         initialValues: {
             title: "",
@@ -27,11 +32,17 @@ const EditAdvertForm = ({advertId}:Props) => {
             try {
                 const response = await fetch(`/api/adverts/${advertId}`, {
                     method: "PATCH",
-                    headers: { "Content-Type": "application/json", accept: "*/*" },
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(values),
                 });
                 if (!response.ok) throw new Error("Failed to update advert");
+
+                const updatedAdvert: Advert = await response.json();
+
+                updateAdvert(updatedAdvert); // обновляем глобальный контекст
+
                 setMessage({ type: "success", text: "Advert updated successfully!" });
+                onUpdated();
             } catch (e: any) {
                 setMessage({ type: "error", text: e.message });
             }
@@ -58,18 +69,17 @@ const EditAdvertForm = ({advertId}:Props) => {
         if (message) {
             const timer = setTimeout(() => {
                 setMessage(null);
-            }, 10000); // 10 секунд = 10000 мс
-
+            }, 10000);
 
             return () => clearTimeout(timer);
         }
     }, [message]);
+
     return (
         <form
             onSubmit={formik.handleSubmit}
-            className="max-w-md mx-auto p-4 border rounded space-y-2"
+            className="max-w-md mx-auto p-4 border rounded space-y-2 bg-white"
         >
-
             {message && (
                 <div
                     className={`p-2 rounded text-sm ${
@@ -90,7 +100,6 @@ const EditAdvertForm = ({advertId}:Props) => {
             >
                 Save
             </button>
-
         </form>
     );
 };

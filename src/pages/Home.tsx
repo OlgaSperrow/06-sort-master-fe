@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import AdvertList from "../components/AdvertList.tsx";
+
+import AdvertsGalerie from "../components/AdvertsGalerie.tsx";
 
 interface Result {
   item: string;
@@ -68,8 +69,9 @@ const Home = () => {
         ))}
       </ul>
         <div className="mt-10">
-            <h2 className="text-2xl font-bold mb-4">Adverts</h2>
-            <AdvertList />
+            <h2 className="text-2xl text-center font-bold mb-4">Adverts</h2>
+            <AdvertsGalerie/>
+
         </div>
     </div>
 
