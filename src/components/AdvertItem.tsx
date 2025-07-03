@@ -13,6 +13,7 @@ const AdvertItem = ({title, description, photo}:AdvertItemProps) => {
                     className="max-w-xs mt-2 rounded"
                 />
             )}
+
         </div>
     );
 };

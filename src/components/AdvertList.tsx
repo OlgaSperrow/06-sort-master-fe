@@ -1,42 +1,22 @@
-import  {useEffect, useState} from 'react';
-import type {Advert} from "../common/Advert.ts";
-import AdvertItem from "./AdvertItem.tsx";
-
-
+import AdvertItem from "./AdvertItem";
+import { useAdvertContext } from "../app/UseAdvertContext.ts";
 
 const AdvertList = () => {
-    const [adverts, setAdverts] = useState<Advert[]>([]);
-    const [message, setMessage] = useState<string | null>(null);
+    const { adverts } = useAdvertContext();
 
-    async function fetchAdverts() {
-        try {
-            const res = await fetch("/api/adverts");
-            const arr = await res.json();
-            setAdverts(arr);
-            setMessage(null);
-        } catch (err) {
-            console.error(err);
-            setMessage("Advert not loaded");
-        }
-    }
-
-    useEffect(() => {
-        fetchAdverts();
-    }, []);
     return (
-        <div>
-            {message && <p className="text-red-400">{message}</p>}
-            <ul>
+        <div className="p-4">
+            <ul className="space-y-4">
                 {adverts.map((advert) => (
-                    <AdvertItem
-                        key={advert.id}
-                        title={advert.title}
-                        description={advert.description}
-                        photo={advert.photo}
-                    />
+                    <li key={advert.id} className="pb-4">
+                        <AdvertItem
+                            title={advert.title}
+                            description={advert.description}
+                            photo={advert.photo}
+                        />
+                    </li>
                 ))}
             </ul>
-            
         </div>
     );
 };
